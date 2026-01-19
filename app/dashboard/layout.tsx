@@ -27,6 +27,8 @@ export default function DashboardLayout({
     checkAuth();
   }, [router]);
 
+  // No mobile menu logic needed here as it's handled by Navbar
+  
   if (isChecking) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -40,9 +42,13 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen pt-16">
-      <AppSidebar />
-      <main className="flex-1 overflow-y-auto bg-background p-8">
+    <div className="flex min-h-screen pt-16 relative">
+      {/* Sidebar - Hidden on mobile, fixed on desktop */}
+      <div className="hidden md:block w-72 border-r bg-background h-[calc(100vh-4rem)] sticky top-16">
+         <AppSidebar />
+      </div>
+
+      <main className="flex-1 overflow-y-auto bg-background p-4 md:p-8 w-full">
         {children}
       </main>
     </div>

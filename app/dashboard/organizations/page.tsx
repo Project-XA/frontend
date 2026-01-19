@@ -35,22 +35,33 @@ export default function OrganizationsPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Organizations</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchOrganizations} disabled={loading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8">
+      {/* Header with buttons */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 w-full">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Organizations</h1>
+
+        {/* Buttons container */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchOrganizations}
+            disabled={loading}
+            className="w-full sm:w-auto flex justify-center sm:justify-start"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
             Refresh
           </Button>
-          <Link href="/dashboard/organizations/create">
-            <Button>
+
+          <Link href="/dashboard/organizations/create" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto flex justify-center sm:justify-start">
               <Plus className="mr-2 h-4 w-4" /> Create Organization
             </Button>
           </Link>
         </div>
       </div>
 
+      {/* Loading state */}
       {loading ? (
         <div className="flex justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -60,31 +71,35 @@ export default function OrganizationsPage() {
           {error}
         </div>
       ) : organizations.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {organizations.map((org) => (
-            <Link 
-              key={org.organizationId} 
+            <Link
+              key={org.organizationId}
               href={`/dashboard/organizations/${org.organizationId}`}
-              className="block rounded-xl border bg-card p-6 shadow text-card-foreground hover:shadow-md hover:border-foreground/20 transition-all cursor-pointer"
+              className="block rounded-xl border bg-card p-4 sm:p-6 shadow text-card-foreground hover:shadow-md hover:border-foreground/20 transition-all cursor-pointer"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-lg bg-muted">
-                  <Building2 className="h-6 w-6 text-muted-foreground" />
+                <div className="p-2 sm:p-3 rounded-lg bg-muted">
+                  <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
                 </div>
                 <div className="flex-1 space-y-2">
                   <div>
-                      <h3 className="text-xl font-semibold">{org.organizationName}</h3>
-                      <p className="text-muted-foreground text-sm">{org.organizationType}</p>
+                    <h3 className="text-base sm:text-xl font-semibold">{org.organizationName}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
                   </div>
-                  
+
                   <div className="grid gap-1 text-sm pt-2">
                     <div className="flex items-center gap-2 overflow-hidden">
                       <span className="text-muted-foreground shrink-0">Email:</span>
-                      <span className="truncate" title={org.conatactEmail}>{org.conatactEmail}</span>
+                      <span className="truncate" title={org.conatactEmail}>
+                        {org.conatactEmail}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-muted-foreground">Code:</span>
-                      <span className="font-mono bg-muted px-2 py-0.5 rounded text-xs">{org.organizationCode}</span>
+                      <span className="font-mono bg-muted px-2 py-0.5 rounded text-xs">
+                        {org.organizationCode}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-muted-foreground">Created:</span>
@@ -97,14 +112,14 @@ export default function OrganizationsPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border bg-card p-12 text-center">
-          <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium mb-2">No Organizations Yet</h3>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+        <div className="rounded-xl border bg-card p-8 sm:p-12 text-center">
+          <Building2 className="h-10 sm:h-12 w-10 sm:w-12 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-base sm:text-lg font-medium mb-2">No Organizations Yet</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-6 max-w-xs sm:max-w-md mx-auto">
             You are not part of any organizations yet. Create one to get started.
           </p>
-          <Link href="/dashboard/organizations/create">
-            <Button>
+          <Link href="/dashboard/organizations/create" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto flex justify-center sm:justify-start">
               <Plus className="mr-2 h-4 w-4" /> Create Your First Organization
             </Button>
           </Link>

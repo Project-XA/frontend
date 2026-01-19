@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
-import { Loader2, Building2, Trash2, UserPlus, Save, AlertCircle, ArrowLeft } from "lucide-react";
+import { Loader2, Building2, Trash2, UserPlus, Save, AlertCircle, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 export default function OrganizationDetailPage() {
@@ -45,7 +45,11 @@ export default function OrganizationDetailPage() {
   });
   const [addingMember, setAddingMember] = useState(false);
   const [memberSuccess, setMemberSuccess] = useState(false);
-  const [memberError, setMemberError] = useState<string | null>(null);
+  const [memberErrors, setMemberErrors] = useState<string[]>([]);
+
+  // Show/hide password
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const fetchOrg = async () => {
@@ -109,11 +113,16 @@ export default function OrganizationDetailPage() {
     }
   };
 
+  const handleMemberChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setMemberData({ ...memberData, [e.target.name]: e.target.value });
+    if (memberErrors.length > 0) setMemberErrors([]);
+  };
+
   const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();
     setAddingMember(true);
     setMemberSuccess(false);
-    setMemberError(null);
+    setMemberErrors([]);
     try {
       const response = await organizationService.addMember({
         ...memberData,
@@ -130,10 +139,18 @@ export default function OrganizationDetailPage() {
           role: "User",
         });
       } else {
-        setMemberError(response.message || "Failed to add member.");
+        if (response.errors && response.errors.length > 0) {
+          setMemberErrors(response.errors);
+        } else {
+          setMemberErrors([response.message || "Failed to add member."]);
+        }
       }
     } catch (err: any) {
-      setMemberError(err.response?.data?.message || err.message || "An error occurred.");
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        setMemberErrors(err.response.data.errors);
+      } else {
+        setMemberErrors([err.response?.data?.message || err.message || "An error occurred."]);
+      }
     } finally {
       setAddingMember(false);
     }
@@ -241,54 +258,83 @@ export default function OrganizationDetailPage() {
             <form onSubmit={handleAddMember} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <Input
+                  name="fullName"
                   placeholder="Full Name"
                   value={memberData.fullName}
-                  onChange={(e) => setMemberData({ ...memberData, fullName: e.target.value })}
+                  onChange={handleMemberChange}
                   required
                 />
                 <Input
+                  name="userName"
                   placeholder="Username"
                   value={memberData.userName}
-                  onChange={(e) => setMemberData({ ...memberData, userName: e.target.value })}
+                  onChange={handleMemberChange}
                   required
                 />
               </div>
               <Input
+                name="email"
                 type="email"
                 placeholder="Email"
                 value={memberData.email}
-                onChange={(e) => setMemberData({ ...memberData, email: e.target.value })}
+                onChange={handleMemberChange}
                 required
               />
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  type="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={memberData.password}
-                  onChange={(e) => setMemberData({ ...memberData, password: e.target.value })}
+                  onChange={handleMemberChange}
                   required
+                  suffix={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="hover:text-black text-zinc-500"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  }
                 />
                 <Input
-                  type="password"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm Password"
                   value={memberData.confirmPassword}
-                  onChange={(e) => setMemberData({ ...memberData, confirmPassword: e.target.value })}
+                  onChange={handleMemberChange}
                   required
+                  suffix={
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="hover:text-black text-zinc-500"
+                    >
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  }
                 />
               </div>
               <select
+                name="role"
                 value={memberData.role}
-                onChange={(e) => setMemberData({ ...memberData, role: e.target.value as "Admin" | "User" })}
+                onChange={handleMemberChange}
                 className="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <option value="User">User</option>
                 <option value="Admin">Admin</option>
               </select>
 
-              {memberError && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{memberError}</AlertDescription>
+              {memberErrors.length > 0 && (
+                <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 border-red-200 bg-red-50 text-red-900">
+                  <AlertCircle className="h-4 w-4 text-red-900" />
+                  <AlertTitle className="text-red-900 font-semibold">Error</AlertTitle>
+                  <div className="mt-2 text-sm text-red-800 list-disc pl-4 space-y-1">
+                    {memberErrors.map((err, index) => (
+                      <div key={index}>• {err}</div>
+                    ))}
+                  </div>
                 </Alert>
               )}
               {memberSuccess && (
@@ -307,40 +353,44 @@ export default function OrganizationDetailPage() {
       </div>
 
       {/* Danger Zone */}
-      <Card className="border-destructive/50">
-        <CardHeader>
-          <CardTitle className="text-destructive">Danger Zone</CardTitle>
-          <CardDescription>Irreversible actions. Proceed with caution.</CardDescription>
+      <Card className="border border-red-500/60">
+        <CardHeader className="flex flex-row items-start gap-4">
+          <div className="mt-1 rounded-md border border-red-500/60 p-2">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+          </div>
+          <div className="space-y-1">
+            <CardTitle className="text-red-600">Danger Zone</CardTitle>
+            <CardDescription>Actions in this section are irreversible</CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-5">
           {!showDeleteConfirm ? (
-            <Button 
-              variant="destructive" 
-              onClick={() => setShowDeleteConfirm(true)}
-              className="cursor-pointer"
-            >
-              <Trash2 className="mr-2 h-4 w-4" /> Delete Organization
-            </Button>
+            <div className="flex items-center justify-between gap-4 rounded-lg border border-muted p-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Delete this organization</p>
+                <p className="text-sm text-muted-foreground">
+                  This will permanently delete the organization and all associated data.
+                </p>
+              </div>
+              <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)}>
+                <Trash2 className="mr-2 h-4 w-4" /> Delete
+              </Button>
+            </div>
           ) : (
-            <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Are you sure you want to delete <strong>{organization.organizationName}</strong>? This action cannot be undone.
-              </p>
+            <div className="space-y-4 rounded-lg border border-red-500/60 p-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Are you absolutely sure?</p>
+                <p className="text-sm text-muted-foreground">
+                  This action cannot be undone. This will permanently delete{" "}
+                  <span className="font-medium text-foreground">{organization.organizationName}</span>.
+                </p>
+              </div>
               <div className="flex gap-2">
-                <Button 
-                  variant="destructive" 
-                  onClick={handleDelete} 
-                  disabled={deleting}
-                  className="cursor-pointer"
-                >
+                <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
                   {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Yes, Delete
+                  Yes, delete
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="cursor-pointer"
-                >
+                <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
                   Cancel
                 </Button>
               </div>

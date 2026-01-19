@@ -16,7 +16,11 @@ const sidebarItems = [
   { title: "Halls", href: "/dashboard/halls", icon: Store },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onItemClick?: () => void;
+}
+
+export function AppSidebar({ onItemClick }: AppSidebarProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) =>
@@ -25,7 +29,7 @@ export function AppSidebar() {
       : pathname?.startsWith(href);
 
   return (
-    <aside className="flex h-screen w-72 flex-col border-r bg-background">
+    <aside className="flex h-full w-full flex-col bg-background">
       {/* Top */}
       <div className="px-6 py-5 border-b">
         <h2 className="text-lg font-semibold tracking-tight">
@@ -43,6 +47,7 @@ export function AppSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onItemClick}
               className={cn(
                 "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all",
                 active
