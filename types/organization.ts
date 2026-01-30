@@ -28,3 +28,14 @@ export interface AddMemberRequest {
   confirmPassword: string;
   role: 'Admin' | 'User';
 }
+
+export interface User {
+  id: string;
+  fullName: string;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  role: 'Admin' | 'User';
+  createdAt: string;
+  updatedAt: string;
+}

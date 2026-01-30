@@ -42,3 +42,12 @@ export interface Session {
   endAt: string;
   hallId: number;
 }
+
+export interface AttendanceRecord {
+  userId: string;
+  userName: string;
+  fullName: string;
+  timeStamp: string;
+  verificationType: 'Face' | 'FingerPrint';
+  matchScore: number | null;
+}

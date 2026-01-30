@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance';
 import { ApiResponse } from '@/types/auth';
-import { CreateSessionRequest, UpdateSessionRequest, Session } from '@/types/session';
+import { CreateSessionRequest, UpdateSessionRequest, Session, AttendanceRecord } from '@/types/session';
 
 const BASE_PATH = '/Session';
 
@@ -32,6 +32,11 @@ export const sessionService = {
 
   deleteSession: async (id: number): Promise<ApiResponse<null>> => {
     const response = await axiosInstance.delete<ApiResponse<null>>(`${BASE_PATH}/${id}`);
+    return response.data;
+  },
+
+  getSessionAttendance: async (sessionId: number): Promise<ApiResponse<AttendanceRecord[]>> => {
+    const response = await axiosInstance.get<ApiResponse<AttendanceRecord[]>>(`${BASE_PATH}/${sessionId}/attendance`);
     return response.data;
   }
 };

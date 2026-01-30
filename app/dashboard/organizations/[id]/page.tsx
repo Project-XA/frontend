@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { organizationService } from "@/services/organizationService";
-import { Organization, UpdateOrganizationRequest, AddMemberRequest } from "@/types/organization";
+import { Organization, UpdateOrganizationRequest, AddMemberRequest, User } from "@/types/organization";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
-import { Loader2, Building2, Trash2, UserPlus, Save, AlertCircle, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Loader2, Building2, Trash2, UserPlus, Save, AlertCircle, ArrowLeft, Eye, EyeOff, Users } from "lucide-react";
 import Link from "next/link";
 
 export default function OrganizationDetailPage() {
@@ -51,6 +51,11 @@ export default function OrganizationDetailPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Members list state
+  const [members, setMembers] = useState<User[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(true);
+  const [membersError, setMembersError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchOrg = async () => {
       setLoading(true);
@@ -75,6 +80,27 @@ export default function OrganizationDetailPage() {
     };
     if (orgId) fetchOrg();
   }, [orgId]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      setLoadingMembers(true);
+      setMembersError(null);
+      try {
+        const response = await organizationService.getOrganizationUsers(orgId);
+        if (response.success && response.data) {
+          setMembers(response.data);
+        } else {
+          setMembersError(response.message || "Failed to load members.");
+        }
+      } catch (err: any) {
+        console.error(err);
+        setMembersError(err.response?.data?.message || err.message || "Failed to load members.");
+      } finally {
+        setLoadingMembers(false);
+      }
+    };
+    if (orgId) fetchMembers();
+  }, [orgId, memberSuccess]); // Refetch when a new member is added
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -351,6 +377,69 @@ export default function OrganizationDetailPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Members List */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" /> Organization Members
+          </CardTitle>
+          <CardDescription>View all members in this organization.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingMembers ? (
+            <div className="flex justify-center items-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : membersError ? (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{membersError}</AlertDescription>
+            </Alert>
+          ) : members.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">No members found in this organization.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4 font-medium text-sm">Name</th>
+                    <th className="text-left py-3 px-4 font-medium text-sm">Username</th>
+                    <th className="text-left py-3 px-4 font-medium text-sm">Email</th>
+                    <th className="text-left py-3 px-4 font-medium text-sm">Phone</th>
+                    <th className="text-left py-3 px-4 font-medium text-sm">Role</th>
+                    <th className="text-left py-3 px-4 font-medium text-sm">Joined</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {members.map((member) => (
+                    <tr key={member.id} className="border-b hover:bg-muted/50 transition-colors">
+                      <td className="py-3 px-4 text-sm">{member.fullName}</td>
+                      <td className="py-3 px-4 text-sm text-muted-foreground">{member.userName}</td>
+                      <td className="py-3 px-4 text-sm">{member.email}</td>
+                      <td className="py-3 px-4 text-sm text-muted-foreground">{member.phoneNumber}</td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            member.role === "Admin"
+                              ? "bg-blue-100 text-blue-800 border border-blue-200"
+                              : "bg-gray-100 text-gray-800 border border-gray-200"
+                          }`}
+                        >
+                          {member.role}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-muted-foreground">
+                        {new Date(member.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Danger Zone */}
       <Card className="border border-red-500/60">

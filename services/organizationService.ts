@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance';
 import { ApiResponse } from '@/types/auth'; // Reusing generic ApiResponse
-import { CreateOrganizationRequest, UpdateOrganizationRequest, Organization, AddMemberRequest } from '@/types/organization';
+import { CreateOrganizationRequest, UpdateOrganizationRequest, Organization, AddMemberRequest, User } from '@/types/organization';
 
 const BASE_PATH = '/Organization';
 
@@ -32,6 +32,11 @@ export const organizationService = {
 
   addMember: async (data: AddMemberRequest): Promise<ApiResponse<null>> => {
     const response = await axiosInstance.post<ApiResponse<null>>(`${BASE_PATH}/add-member`, data);
+    return response.data;
+  },
+
+  getOrganizationUsers: async (id: number): Promise<ApiResponse<User[]>> => {
+    const response = await axiosInstance.get<ApiResponse<User[]>>(`${BASE_PATH}/${id}/users`);
     return response.data;
   }
 };

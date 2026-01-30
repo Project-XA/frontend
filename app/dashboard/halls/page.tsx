@@ -232,32 +232,35 @@ export default function HallsPage() {
                       <div className="space-y-3">
                         <h4 className="font-medium text-sm text-muted-foreground mb-3">Sessions in this Hall</h4>
                         {sessions.map((session) => (
-                          <div 
-                            key={session.sessionId} 
-                            className="rounded-lg border bg-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3"
+                          <Link 
+                            key={session.sessionId}
+                            href={`/dashboard/halls/sessions/${session.sessionId}/attendance`}
+                            className="block"
                           >
-                            <div className="flex items-start gap-3">
-                              <div className="p-2 rounded-lg bg-muted">
-                                <Users className="h-4 w-4 text-muted-foreground" />
-                              </div>
-                              <div>
-                                <h5 className="font-medium">{session.sessionName}</h5>
-                                <div className="mt-1 space-y-0.5 text-xs text-muted-foreground">
-                                  <p className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3" />
-                                    <span>{formatDateTime(session.startAt)} — {formatDateTime(session.endAt)}</span>
-                                  </p>
-                                  <p className="flex items-center gap-1">
-                                    <MapPin className="h-3 w-3" />
-                                    <span>Radius: {session.allowedRadius}m</span>
-                                  </p>
+                            <div className="rounded-lg border bg-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 rounded-lg bg-muted">
+                                  <Users className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                                <div>
+                                  <h5 className="font-medium">{session.sessionName}</h5>
+                                  <div className="mt-1 space-y-0.5 text-xs text-muted-foreground">
+                                    <p className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      <span>{formatDateTime(session.startAt)} — {formatDateTime(session.endAt)}</span>
+                                    </p>
+                                    <p className="flex items-center gap-1">
+                                      <MapPin className="h-3 w-3" />
+                                      <span>Radius: {session.allowedRadius}m</span>
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
+                              <span className="px-2.5 py-1 bg-muted rounded-full text-xs font-medium">
+                                {session.connectionType}
+                              </span>
                             </div>
-                            <span className="px-2.5 py-1 bg-muted rounded-full text-xs font-medium">
-                              {session.connectionType}
-                            </span>
-                          </div>
+                          </Link>
                         ))}
                       </div>
                     ) : (
