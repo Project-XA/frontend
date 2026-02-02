@@ -23,6 +23,7 @@ export interface AddMemberRequest {
   organizationId: number;
   email: string;
   fullName: string;
+  phoneNumber: string;
   userName: string;
   password: string;
   confirmPassword: string;

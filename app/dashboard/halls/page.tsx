@@ -34,7 +34,7 @@ export default function HallsPage() {
           setOrganizations(response.data);
           
           // Auto-select if only one organization
-          if (response.data.length === 1) {
+         if (response.data.length > 0 && !selectedOrgId) {
             setSelectedOrgId(response.data[0].organizationId);
           }
         }
