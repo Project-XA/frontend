@@ -15,9 +15,8 @@ export const AdminAttendanceMockup: React.FC<AdminAttendanceMockupProps> = ({ ch
   ];
 
   const defaultAttendees = [
-    { id: 1, name: 'Ahmed Mohamed', time: '09:15' },
-    { id: 2, name: 'Sara Wilson', time: '09:17' },
-    { id: 3, name: 'Omar Hassan', time: '09:20' },
+    { id: 1, name: 'Sara Wilson', time: '09:17' },
+    { id: 2, name: 'Omar Hassan', time: '09:20' },
   ];
 
   const attendees = checkedInUser 
@@ -30,12 +29,6 @@ export const AdminAttendanceMockup: React.FC<AdminAttendanceMockupProps> = ({ ch
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Status Bar */}
-      <div className="px-3 py-1.5 bg-white border-b border-gray-200 flex items-center justify-between">
-        <span className="text-[9px] font-semibold text-black">9:41</span>
-        <span className="text-[9px] font-semibold text-black">•••</span>
-      </div>
-
       {/* Admin Header */}
       <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -47,7 +40,6 @@ export const AdminAttendanceMockup: React.FC<AdminAttendanceMockupProps> = ({ ch
             <p className="text-[8px] text-gray-600">Admin</p>
           </div>
         </div>
-        <div className="text-red-500 text-[8px] font-bold">🔴</div>
       </div>
 
       {/* Welcome Card */}
@@ -98,7 +90,7 @@ export const AdminAttendanceMockup: React.FC<AdminAttendanceMockupProps> = ({ ch
           <div className="flex-1 overflow-auto px-3 py-2 space-y-2">
             {attendees.map((attendee) => (
               <div
-                key={attendee.id || attendee.name}
+                key={attendee.name}
                 className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <div className="w-7 h-7 rounded-full bg-black flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">

@@ -11,16 +11,9 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({ children, className = 
       {/* Android Phone Frame - Minimal Black and White */}
       <div className="absolute inset-0 rounded-[40px] border-8 border-black bg-black shadow-lg">
         
-        {/* Camera Notch */}
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-6 h-6 bg-black rounded-full z-10"></div>
-        
+
         {/* Screen */}
         <div className="relative w-full h-full rounded-[32px] bg-white overflow-hidden flex flex-col">
-          {/* Status Bar */}
-          <div className="h-5 bg-black flex items-center justify-between px-4 text-white text-xs font-semibold flex-shrink-0">
-            <span>9:41</span>
-          </div>
-          
           {/* Content */}
           <div className="flex-1 overflow-auto flex flex-col">
             {children}

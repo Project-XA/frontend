@@ -27,12 +27,6 @@ export const UserAttendanceMockup: React.FC<UserAttendanceMockupProps> = ({ onCh
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Status Bar */}
-      <div className="px-3 py-1.5 bg-white border-b border-gray-200 flex items-center justify-between">
-        <span className="text-[9px] font-semibold text-black">9:41</span>
-        <span className="text-[9px] font-semibold text-black">•••</span>
-      </div>
-
       {/* User Header */}
       <div className="px-3 py-2 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -43,9 +37,6 @@ export const UserAttendanceMockup: React.FC<UserAttendanceMockupProps> = ({ onCh
             <p className="text-[9px] font-bold text-black">Ahmed Mohamed</p>
             <p className="text-[8px] text-gray-600">user</p>
           </div>
-        </div>
-        <div className="text-red-500">
-          <div className="text-[8px] font-bold">🔴</div>
         </div>
       </div>
 
