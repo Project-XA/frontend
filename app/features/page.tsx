@@ -55,7 +55,7 @@ export default function FeaturesPage() {
           </div>
         </section>
 
-        {/* Demo Section - Side by Side */}
+        {/* Demo Section */}
         <section className="py-20 md:py-32 px-6 bg-gray-50 border-y border-gray-200">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-16 space-y-4">
@@ -63,7 +63,6 @@ export default function FeaturesPage() {
               <p className="text-gray-700 text-lg">Explore both user and admin interfaces</p>
             </div>
 
-            {/* Mockups Side by Side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
               {/* User View */}
               <div className="flex flex-col items-center space-y-6">
@@ -74,25 +73,27 @@ export default function FeaturesPage() {
                   </div>
                   <p className="text-gray-600 text-sm">Fast and secure attendance marking</p>
                 </div>
-                <div className="rounded-2xl shadow-lg">
+
+                <div className="flex flex-col items-center w-[260px]">
                   <MobileFrame>
                     <UserAttendanceMockup onCheckIn={setCheckedInUser} />
                   </MobileFrame>
+
+                  <ul className="space-y-3 w-full mt-6">
+                    <li className="flex items-start gap-3 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium">One-tap check-in with biometric verification</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium">Real-time session information display</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium">Attendance statistics at a glance</span>
+                    </li>
+                  </ul>
                 </div>
-                <ul className="space-y-3 w-full">
-                  <li className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium">One-tap check-in with biometric verification</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium">Real-time session information display</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium">Attendance statistics at a glance</span>
-                  </li>
-                </ul>
               </div>
 
               {/* Admin View */}
@@ -104,31 +105,33 @@ export default function FeaturesPage() {
                   </div>
                   <p className="text-gray-600 text-sm">Complete attendance monitoring</p>
                 </div>
-                <div className="rounded-2xl shadow-lg">
+
+                <div className="flex flex-col items-center w-[260px]">
                   <MobileFrame>
                     <AdminAttendanceMockup checkedInUser={checkedInUser} />
                   </MobileFrame>
+
+                  <ul className="space-y-3 w-full mt-6">
+                    <li className="flex items-start gap-3 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium">Live attendance list with verification status</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium">Real-time verification scores and confidence</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-medium">Expandable details for each attendee</span>
+                    </li>
+                  </ul>
                 </div>
-                <ul className="space-y-3 w-full">
-                  <li className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium">Live attendance list with verification status</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium">Real-time verification scores and confidence</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="h-5 w-5 text-black flex-shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium">Expandable details for each attendee</span>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Grid Section */}
+        {/* Features Grid */}
         <section className="py-20 md:py-32 px-6 bg-white">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16 space-y-4">
@@ -140,7 +143,7 @@ export default function FeaturesPage() {
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
-                  <div 
+                  <div
                     key={index}
                     className="p-8 border-2 border-black rounded-lg bg-white hover:shadow-lg transition-all duration-300 group"
                   >
@@ -158,17 +161,16 @@ export default function FeaturesPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA */}
         <section className="py-20 md:py-32 px-6 bg-white">
           <div className="container mx-auto max-w-4xl text-center space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-bold text-black">
-                Ready to streamline attendance?
-              </h2>
-              <p className="text-lg text-gray-700">
-                Join thousands of organizations using Attento for secure, efficient attendance tracking.
-              </p>
-            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-black">
+              Ready to streamline attendance?
+            </h2>
+            <p className="text-lg text-gray-700">
+              Join thousands of organizations using Attento for secure, efficient attendance tracking.
+            </p>
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/register">
                 <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-gray-900 font-semibold">
@@ -184,6 +186,7 @@ export default function FeaturesPage() {
           </div>
         </section>
       </main>
+
       <Footer />
     </div>
   );

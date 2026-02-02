@@ -11,7 +11,6 @@ export const AdminAttendanceMockup: React.FC<AdminAttendanceMockupProps> = ({ ch
   const sessions = [
     { id: 4, name: 'Test four', sessionId: 'ID: UNKNOWN_1768216330605', location: 'session', time: '13:34', date: 'Jan 12' },
     { id: 6, name: 'Test six', sessionId: 'ID: UNKNOWN_1768216577274', location: 'session', time: '13:34', date: 'Jan 12' },
-    { id: 7, name: 'Test five', sessionId: 'ID: UNKNOWN_1768216849593', location: 'session', time: '13:35', date: 'Jan 12' },
   ];
 
   const defaultAttendees = [
