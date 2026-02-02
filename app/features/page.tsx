@@ -9,6 +9,8 @@ import { UserAttendanceMockup } from "@/components/UserAttendanceMockup";
 import { Footer } from "@/components/Footer";
 
 export default function FeaturesPage() {
+  const [checkedInUser, setCheckedInUser] = React.useState<{ name: string; time: string } | null>(null);
+
   const features = [
     {
       icon: Smartphone,
@@ -73,7 +75,7 @@ export default function FeaturesPage() {
                 </div>
                 <div className="rounded-2xl shadow-lg">
                   <MobileFrame>
-                    <UserAttendanceMockup />
+                    <UserAttendanceMockup onCheckIn={setCheckedInUser} />
                   </MobileFrame>
                 </div>
                 <ul className="space-y-3 w-full">
@@ -103,7 +105,7 @@ export default function FeaturesPage() {
                 </div>
                 <div className="rounded-2xl shadow-lg">
                   <MobileFrame>
-                    <AdminAttendanceMockup />
+                    <AdminAttendanceMockup checkedInUser={checkedInUser} />
                   </MobileFrame>
                 </div>
                 <ul className="space-y-3 w-full">
@@ -151,26 +153,6 @@ export default function FeaturesPage() {
                   </div>
                 );
               })}
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="py-16 md:py-24 px-6 bg-black text-white">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              {[
-                { label: "Time Saved", value: "98%", desc: "per check-in" },
-                { label: "Accuracy", value: "99.8%", desc: "verification rate" },
-                { label: "Users", value: "10K+", desc: "active daily" },
-                { label: "Uptime", value: "99.9%", desc: "reliability" }
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <p className="text-3xl md:text-4xl font-bold mb-2">{stat.value}</p>
-                  <p className="font-semibold text-sm mb-1">{stat.label}</p>
-                  <p className="text-gray-400 text-xs">{stat.desc}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>

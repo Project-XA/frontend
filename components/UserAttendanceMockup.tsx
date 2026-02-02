@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { CheckCircle, Clock, MapPin, Users as UsersIcon, Wifi, Calendar } from 'lucide-react';
 
-export const UserAttendanceMockup: React.FC = () => {
+interface UserAttendanceMockupProps {
+  onCheckIn?: (user: { name: string; time: string }) => void;
+}
+
+export const UserAttendanceMockup: React.FC<UserAttendanceMockupProps> = ({ onCheckIn }) => {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -10,6 +14,10 @@ export const UserAttendanceMockup: React.FC = () => {
     setTimeout(() => {
       setIsCheckedIn(true);
       setIsLoading(false);
+      // Notify parent that user checked in
+      if (onCheckIn) {
+        onCheckIn({ name: 'Ahmed Mohamed', time: '11:35 AM' });
+      }
     }, 1500);
   };
 
