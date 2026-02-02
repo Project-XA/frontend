@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CheckCircle, Users, Smartphone, Zap, Lock, BarChart3 } from "lucide-react";
@@ -9,7 +10,7 @@ import { UserAttendanceMockup } from "@/components/UserAttendanceMockup";
 import { Footer } from "@/components/Footer";
 
 export default function FeaturesPage() {
-  const [checkedInUser, setCheckedInUser] = React.useState<{ name: string; time: string } | null>(null);
+  const [checkedInUser, setCheckedInUser] = useState<{ name: string; time: string } | null>(null);
 
   const features = [
     {
