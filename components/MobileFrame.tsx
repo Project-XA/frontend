@@ -7,27 +7,29 @@ interface MobileFrameProps {
 
 export const MobileFrame: React.FC<MobileFrameProps> = ({ children, className = '' }) => {
   return (
-    <div className={`relative mx-auto ${className}`} style={{ width: '280px', height: '570px' }}>
-      {/* Phone Frame */}
-      <div className="absolute inset-0 rounded-[45px] border-[16px] border-black bg-black shadow-2xl">
-        {/* Notch */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-10"></div>
+    <div className={`relative mx-auto ${className}`} style={{ width: '260px', height: '520px' }}>
+      {/* Android Phone Frame - Minimal Black and White */}
+      <div className="absolute inset-0 rounded-[40px] border-8 border-black bg-black shadow-lg">
+        
+        {/* Camera Notch */}
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-6 h-6 bg-black rounded-full z-10"></div>
         
         {/* Screen */}
-        <div className="relative w-full h-full rounded-[30px] bg-white overflow-hidden">
-          {children}
+        <div className="relative w-full h-full rounded-[32px] bg-white overflow-hidden flex flex-col">
+          {/* Status Bar */}
+          <div className="h-5 bg-black flex items-center justify-between px-4 text-white text-xs font-semibold flex-shrink-0">
+            <span>9:41</span>
+          </div>
+          
+          {/* Content */}
+          <div className="flex-1 overflow-auto flex flex-col">
+            {children}
+          </div>
         </div>
-        
-        {/* Home Indicator */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-24 h-1 bg-gray-300 rounded-full"></div>
       </div>
       
-      {/* Volume Buttons */}
-      <div className="absolute -left-1 top-24 w-1 h-6 bg-black rounded-l"></div>
-      <div className="absolute -left-1 top-36 w-1 h-10 bg-black rounded-l"></div>
-      
-      {/* Power Button */}
-      <div className="absolute -right-1 top-28 w-1 h-12 bg-black rounded-r"></div>
+      {/* Side Button */}
+      <div className="absolute -right-1 top-24 w-1 h-10 bg-black rounded-r"></div>
     </div>
   );
 };
