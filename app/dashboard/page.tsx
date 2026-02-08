@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { organizationService } from "@/services/organizationService";
-import { Organization } from "@/types/organization";
-import { Loader2, Building2, Plus, ArrowRight } from "lucide-react";
+import { Organization, OrganizationEvent } from "@/types/organization";
+import { Loader2, Building2, Plus, ArrowRight, Activity, Clock } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 
 export default function DashboardPage() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [recentEvents, setRecentEvents] = useState<OrganizationEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingEvents, setLoadingEvents] = useState(true);
 
   const fetchStats = async () => {
     setLoading(true);
@@ -17,6 +20,7 @@ export default function DashboardPage() {
       const orgResponse = await organizationService.getUserOrganizations();
       if (orgResponse.success && orgResponse.data) {
         setOrganizations(orgResponse.data);
+        fetchEvents(orgResponse.data);
       } else {
         setOrganizations([]);
       }
@@ -25,6 +29,38 @@ export default function DashboardPage() {
       setOrganizations([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchEvents = async (orgs: Organization[]) => {
+    setLoadingEvents(true);
+    try {
+      if (orgs.length === 0) {
+        setRecentEvents([]);
+        return;
+      }
+
+      const eventPromises = orgs.map(org => organizationService.getOrganizationEvents(org.organizationId));
+      const eventResponses = await Promise.all(eventPromises);
+
+      const allEvents: OrganizationEvent[] = [];
+      eventResponses.forEach((res, index) => {
+        if (res.success && res.data) {
+          const orgName = orgs[index].organizationName;
+          res.data.forEach(event => {
+            allEvents.push({ ...event, organizationName: orgName });
+          });
+        }
+      });
+
+      // Sort by date descending and take top 10
+      allEvents.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setRecentEvents(allEvents.slice(0, 10));
+
+    } catch (err) {
+      console.error("Failed to fetch dashboard events", err);
+    } finally {
+      setLoadingEvents(false);
     }
   };
 
@@ -82,18 +118,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Halls Button */}
-                <div className="mt-4 sm:mt-6">
-                  <Link href="/dashboard/halls" className="w-full">
-                    <Button
-                      variant="outline"
-                      className="w-full justify-between group cursor-pointer"
-                    >
-                      Halls
-                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </div>
+
               </div>
             ))}
           </div>
@@ -111,6 +136,51 @@ export default function DashboardPage() {
             </Link>
           </div>
         )}
+      </div>
+
+      {/* Recent Activity Section */}
+      <div className="space-y-4 pt-4">
+        <h2 className="text-lg sm:text-xl font-semibold tracking-tight">Recent Activity</h2>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5" /> Activity Stream
+            </CardTitle>
+            <CardDescription>Recent events across all your organizations.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingEvents ? (
+              <div className="flex justify-center items-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : recentEvents.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">No recent activity found.</p>
+            ) : (
+              <div className="space-y-4">
+                {recentEvents.map((event, index) => (
+                  <div key={index} className="flex items-start gap-4 p-4 rounded-lg border bg-muted/30">
+                    <div className="mt-1 bg-background p-2 rounded-full border">
+                      <Activity className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium text-sm">{event.eventType}</p>
+                        <span className="text-xs bg-muted border px-2 py-0.5 rounded-full text-muted-foreground">
+                          {event.organizationName}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{event.description}</p>
+                      <p className="text-xs text-muted-foreground pt-1 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {new Date(event.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -41,7 +41,12 @@ export const organizationService = {
   },
 
   generateApiKey: async (id: number): Promise<ApiResponse<{ apiKey: string }>> => {
-    const response = await axiosInstance.post<ApiResponse<{ apiKey: string }>>(`${BASE_PATH}/${id}/generate-api-key`);
+    const response = await axiosInstance.post(`${BASE_PATH}/${id}/generate-api-key`);
+    return response.data;
+  },
+
+  getOrganizationEvents: async (id: number): Promise<ApiResponse<import('@/types/organization').OrganizationEvent[]>> => {
+    const response = await axiosInstance.get(`${BASE_PATH}/${id}/events`);
     return response.data;
   }
 };

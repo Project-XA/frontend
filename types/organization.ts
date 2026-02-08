@@ -40,3 +40,13 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface OrganizationEvent {
+  id: number;
+  organizationId: number;
+  userId: string;
+  eventType: string;
+  description: string;
+  createdAt: string;
+  organizationName?: string; // Optional because it might not be populated in all contexts
+}

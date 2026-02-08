@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CheckCircle, Users, Smartphone, Zap, Lock, BarChart3 } from "lucide-react";
@@ -8,9 +8,15 @@ import { MobileFrame } from "@/components/MobileFrame";
 import { AdminAttendanceMockup } from "@/components/AdminAttendanceMockup";
 import { UserAttendanceMockup } from "@/components/UserAttendanceMockup";
 import { Footer } from "@/components/Footer";
+import { isAuthenticated } from "@/lib/authUtils";
 
 export default function FeaturesPage() {
   const [checkedInUser, setCheckedInUser] = useState<{ name: string; time: string } | null>(null);
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    setIsAuth(isAuthenticated());
+  }, []);
 
   const features = [
     {
@@ -51,6 +57,16 @@ export default function FeaturesPage() {
               <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
                 Real-time attendance tracking with secure verification, intuitive design, and complete visibility for both users and administrators.
               </p>
+
+              {isAuth && (
+                <div className="pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  <Link href="/dashboard">
+                    <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-gray-900 font-semibold shadow-lg hover:shadow-xl transition-all">
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -165,24 +181,39 @@ export default function FeaturesPage() {
         <section className="py-20 md:py-32 px-6 bg-white">
           <div className="container mx-auto max-w-4xl text-center space-y-8">
             <h2 className="text-4xl md:text-5xl font-bold text-black">
-              Ready to streamline attendance?
+              {isAuth ? "Ready to manage your sessions?" : "Ready to streamline attendance?"}
             </h2>
             <p className="text-lg text-gray-700">
-              Join thousands of organizations using Attento for secure, efficient attendance tracking.
+              {isAuth
+                ? "Access your dashboard to monitor attendance, manage sessions, and more."
+                : "Join thousands of organizations using Attento for secure, efficient attendance tracking."}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/register">
-                <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-gray-900 font-semibold">
-                  Get Started Free
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button variant="outline" size="lg" className="h-12 px-8 text-base border-black text-black hover:bg-gray-100 font-semibold">
-                  Log In
-                </Button>
-              </Link>
-            </div>
+            {isAuth ? (
+              <div className="space-y-6">
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Link href="/dashboard">
+                    <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-gray-900 font-semibold shadow-lg hover:shadow-xl transition-all">
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/register">
+                  <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-gray-900 font-semibold">
+                    Get Started Free
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button variant="outline" size="lg" className="h-12 px-8 text-base border-black text-black hover:bg-gray-100 font-semibold">
+                    Log In
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </section>
       </main>
