@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
 import { Loader2, Key, AlertTriangle, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import CodeTabs from "@/components/CodeTabs";
 
 export default function GenerateApiKeyPage() {
     const params = useParams();
@@ -171,13 +172,14 @@ export default function GenerateApiKeyPage() {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-lg">Integration Example (Node.js/Axios)</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <pre className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto">
-                            {`const axios = require('axios');
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Get Session Attendance Examples</h3>
+                    <CodeTabs
+                        tabs={[
+                            {
+                                label: "Node.js (Axios)",
+                                language: "javascript",
+                                code: `const axios = require('axios');
 
 async function getAttendance(sessionId, apiKey) {
   try {
@@ -192,11 +194,168 @@ async function getAttendance(sessionId, apiKey) {
   }
 }
 
-// Usage
-getAttendance('session-123', 'ace2...');`}
-                        </pre>
-                    </CardContent>
-                </Card>
+getAttendance('session-123', 'YOUR_API_KEY');`
+                            },
+                            {
+                                label: "Python (Requests)",
+                                language: "python",
+                                code: `import requests
+
+def get_attendance(session_id, api_key):
+    url = f"https://api.attendo.com/{session_id}/attendance"
+    headers = {
+        "X-Api-Key": api_key
+    }
+    
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        print(response.json())
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+get_attendance('session-123', 'YOUR_API_KEY')`
+                            },
+                            {
+                                label: "C# (HttpClient)",
+                                language: "csharp",
+                                code: `using System.Net.Http.Headers;
+
+public async Task GetAttendance(string sessionId, string apiKey)
+{
+    using (var client = new HttpClient())
+    {
+        client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+        
+        try 
+        {
+            var response = await client.GetAsync($"https://api.attendo.com/{sessionId}/attendance");
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
+        }
+    }
+}`
+                            },
+                            {
+                                label: "PHP (cURL)",
+                                language: "php",
+                                code: `<?php
+
+$sessionId = 'session-123';
+$apiKey = 'YOUR_API_KEY';
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api.attendo.com/$sessionId/attendance");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "X-Api-Key: $apiKey"
+]);
+
+$response = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    echo 'Error:' . curl_error($ch);
+} else {
+    echo $response;
+}
+
+curl_close($ch);
+?>`
+                            },
+                            {
+                                label: "Java (OkHttp)",
+                                language: "java",
+                                code: `OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.attendo.com/session-123/attendance")
+  .addHeader("X-Api-Key", "YOUR_API_KEY")
+  .build();
+
+try (Response response = client.newCall(request).execute()) {
+  if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+  System.out.println(response.body().string());
+}`
+                            }
+                        ]}
+                    />
+                </div>
+
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Download Attendance CSV Examples</h3>
+                    <CodeTabs
+                        tabs={[
+                            {
+                                label: "Node.js (Axios)",
+                                language: "javascript",
+                                code: `const axios = require('axios');
+const fs = require('fs');
+
+async function downloadCsv(sessionId, apiKey) {
+  try {
+    const response = await axios.get(\`https://api.attendo.com/session/\${sessionId}/csv\`, {
+      headers: { 'X-Api-Key': apiKey },
+      responseType: 'stream'
+    });
+    
+    response.data.pipe(fs.createWriteStream('attendance.csv'));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+downloadCsv('session-123', 'YOUR_API_KEY');`
+                            },
+                            {
+                                label: "Python (Requests)",
+                                language: "python",
+                                code: `import requests
+
+def download_csv(session_id, api_key):
+    url = f"https://api.attendo.com/session/{session_id}/csv"
+    headers = { "X-Api-Key": api_key }
+    
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        
+        with open('attendance.csv', 'wb') as f:
+            f.write(response.content)
+    except Exception as e:
+        print(f"Error: {e}")
+
+download_csv('session-123', 'YOUR_API_KEY')`
+                            },
+                            {
+                                label: "C# (HttpClient)",
+                                language: "csharp",
+                                code: `using System.IO;
+using System.Net.Http;
+
+public async Task DownloadCsv(string sessionId, string apiKey)
+{
+    using (var client = new HttpClient())
+    {
+        client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+        
+        var response = await client.GetAsync($"https://api.attendo.com/session/{sessionId}/csv");
+        
+        if (response.IsSuccessStatusCode) 
+        {
+            var content = await response.Content.ReadAsByteArrayAsync();
+            File.WriteAllBytes("attendance.csv", content);
+        }
+    }
+}`
+                            }
+                        ]}
+                    />
+                </div>
             </div>
         </div>
     );
