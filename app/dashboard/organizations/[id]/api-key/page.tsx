@@ -1,0 +1,121 @@
+"use client";
+
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { organizationService } from "@/services/organizationService";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/Card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
+import { Loader2, Key, AlertTriangle, ArrowLeft, Copy, Check } from "lucide-react";
+import Link from "next/link";
+
+export default function GenerateApiKeyPage() {
+    const params = useParams();
+    const router = useRouter();
+    const orgId = Number(params.id);
+
+    const [loading, setLoading] = useState(false);
+    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
+
+    const handleGenerateValues = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await organizationService.generateApiKey(orgId);
+            if (response.success && response.data) {
+                setApiKey(response.data.apiKey);
+            } else {
+                setError(response.message || "Failed to generate API Key.");
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err.response?.data?.message || err.message || "Failed to generate API Key.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const copyToClipboard = () => {
+        if (apiKey) {
+            navigator.clipboard.writeText(apiKey);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    return (
+        <div className="max-w-2xl mx-auto space-y-6">
+            <div className="flex items-center gap-4">
+                <Link href={`/dashboard/organizations/${orgId}`} className="p-2 rounded-lg hover:bg-muted transition-colors">
+                    <ArrowLeft className="h-5 w-5" />
+                </Link>
+                <h1 className="text-2xl font-bold tracking-tight">Generate API Key</h1>
+            </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Key className="h-5 w-5" /> API Key Generation
+                    </CardTitle>
+                    <CardDescription>
+                        Generate a new API Key for this organization.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {!apiKey ? (
+                        <Alert variant="destructive">
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertTitle>Warning</AlertTitle>
+                            <AlertDescription>
+                                Generating a new API Key will invalidate any existing keys.
+                                The new key will only be shown once. Please make sure to copy and save it securely.
+                            </AlertDescription>
+                        </Alert>
+                    ) : (
+                        <div className="space-y-2">
+                            <Alert className="bg-green-50 text-green-900 border-green-200">
+                                <Check className="h-4 w-4 text-green-600" />
+                                <AlertTitle>Success</AlertTitle>
+                                <AlertDescription>
+                                    API Key generated successfully. Please copy it below.
+                                </AlertDescription>
+                            </Alert>
+                            <div className="flex items-center gap-2">
+                                <code className="flex-1 p-3 bg-muted rounded-md font-mono text-sm break-all">
+                                    {apiKey}
+                                </code>
+                                <Button onClick={copyToClipboard} size="icon" variant="outline" title="Copy to clipboard">
+                                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-2">
+                                This key will not be shown again. If you lose it, you will need to generate a new one.
+                            </p>
+                        </div>
+                    )}
+
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                    {!apiKey ? (
+                        <Button onClick={handleGenerateValues} disabled={loading} variant="destructive">
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Generate API Key
+                        </Button>
+                    ) : (
+                        <Link href={`/dashboard/organizations/${orgId}`}>
+                            <Button variant="outline">Done</Button>
+                        </Link>
+                    )}
+                </CardFooter>
+            </Card>
+        </div>
+    );
+}

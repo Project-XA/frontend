@@ -7,7 +7,7 @@ import { Organization, User } from "@/types/organization";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
-import { Loader2, Building2, UserPlus, AlertCircle, ArrowLeft, Users, Settings } from "lucide-react";
+import { Loader2, Building2, UserPlus, AlertCircle, ArrowLeft, Users, Settings, Key } from "lucide-react";
 import Link from "next/link";
 
 export default function OrganizationDetailPage() {
@@ -105,9 +105,14 @@ export default function OrganizationDetailPage() {
             </div>
           </div>
         </div>
-        
+
         {/* Action Buttons */}
         <div className="flex gap-3">
+          <Link href={`/dashboard/organizations/${orgId}/api-key`}>
+            <Button variant="outline" className="text-destructive hover:text-destructive border-destructive hover:bg-destructive/10">
+              <Key className="mr-2 h-4 w-4" /> Generate API Key
+            </Button>
+          </Link>
           <Link href={`/dashboard/organizations/${orgId}/update`}>
             <Button variant="outline">
               <Settings className="mr-2 h-4 w-4" /> Update Organization
@@ -163,11 +168,10 @@ export default function OrganizationDetailPage() {
                       <td className="py-3 px-4 text-sm text-muted-foreground">{member.phoneNumber}</td>
                       <td className="py-3 px-4">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            member.role === "Admin"
-                              ? "bg-blue-100 text-blue-800 border border-blue-200"
-                              : "bg-gray-100 text-gray-800 border border-gray-200"
-                          }`}
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${member.role === "Admin"
+                            ? "bg-blue-100 text-blue-800 border border-blue-200"
+                            : "bg-gray-100 text-gray-800 border border-gray-200"
+                            }`}
                         >
                           {member.role}
                         </span>

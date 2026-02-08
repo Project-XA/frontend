@@ -11,8 +11,8 @@ export const organizationService = {
   },
 
   getOrganizationStats: async (id: number): Promise<ApiResponse<Organization>> => {
-      const response = await axiosInstance.get<ApiResponse<Organization>>(`${BASE_PATH}/${id}`);
-      return response.data;
+    const response = await axiosInstance.get<ApiResponse<Organization>>(`${BASE_PATH}/${id}`);
+    return response.data;
   },
 
   getUserOrganizations: async (): Promise<ApiResponse<Organization[]>> => {
@@ -37,6 +37,11 @@ export const organizationService = {
 
   getOrganizationUsers: async (id: number): Promise<ApiResponse<User[]>> => {
     const response = await axiosInstance.get<ApiResponse<User[]>>(`${BASE_PATH}/${id}/users`);
+    return response.data;
+  },
+
+  generateApiKey: async (id: number): Promise<ApiResponse<{ apiKey: string }>> => {
+    const response = await axiosInstance.post<ApiResponse<{ apiKey: string }>>(`${BASE_PATH}/${id}/generate-api-key`);
     return response.data;
   }
 };
