@@ -38,5 +38,17 @@ export const sessionService = {
   getSessionAttendance: async (sessionId: number): Promise<ApiResponse<AttendanceRecord[]>> => {
     const response = await axiosInstance.get<ApiResponse<AttendanceRecord[]>>(`${BASE_PATH}/${sessionId}/attendance`);
     return response.data;
+  },
+
+  getSessionAttendanceInternal: async (sessionId: number): Promise<ApiResponse<AttendanceRecord[]>> => {
+    const response = await axiosInstance.get<ApiResponse<AttendanceRecord[]>>(`${BASE_PATH}/${sessionId}/attendance/internal`);
+    return response.data;
+  },
+
+  exportSessionAttendanceCsvInternal: async (sessionId: number): Promise<Blob> => {
+    const response = await axiosInstance.get(`${BASE_PATH}/${sessionId}/csv/internal`, {
+      responseType: 'blob'
+    });
+    return response.data;
   }
 };

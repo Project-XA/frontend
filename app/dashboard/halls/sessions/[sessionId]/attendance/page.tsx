@@ -7,7 +7,7 @@ import { AttendanceRecord, Session } from "@/types/session";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
-import { Loader2, ArrowLeft, Users, AlertCircle, CheckCircle, Fingerprint } from "lucide-react";
+import { Loader2, ArrowLeft, Users, AlertCircle, CheckCircle, Fingerprint, FileDown } from "lucide-react";
 import Link from "next/link";
 
 export default function AttendancePage() {
@@ -35,7 +35,7 @@ export default function AttendancePage() {
         }
 
         // Fetch attendance records
-        const attendanceResponse = await sessionService.getSessionAttendance(sessionId);
+        const attendanceResponse = await sessionService.getSessionAttendanceInternal(sessionId);
         if (attendanceResponse.success && attendanceResponse.data) {
           setAttendance(attendanceResponse.data);
         } else {
@@ -57,6 +57,22 @@ export default function AttendancePage() {
       dateStyle: 'medium',
       timeStyle: 'short'
     });
+  };
+
+  const handleExportCsv = async () => {
+    try {
+      const blob = await sessionService.exportSessionAttendanceCsvInternal(sessionId);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `attendance-${sessionId}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Failed to export CSV", err);
+      // Optional: Add toast notification for error
+    }
   };
 
   const getMatchScoreColor = (score: number | null) => {
@@ -94,23 +110,28 @@ export default function AttendancePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/halls">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Halls
-          </Button>
-        </Link>
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-muted">
-            <Users className="h-6 w-6 text-muted-foreground" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{session.sessionName}</h1>
-            <p className="text-sm text-muted-foreground">
-              {formatDateTime(session.startAt)} — {formatDateTime(session.endAt)}
-            </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard/halls">
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="h-4 w-4 mr-2" /> Back to Halls
+            </Button>
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-lg bg-muted">
+              <Users className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">{session.sessionName}</h1>
+              <p className="text-sm text-muted-foreground">
+                {formatDateTime(session.startAt)} — {formatDateTime(session.endAt)}
+              </p>
+            </div>
           </div>
         </div>
+        <Button onClick={handleExportCsv} variant="outline" disabled={attendance.length === 0}>
+          <FileDown className="mr-2 h-4 w-4" /> Export CSV
+        </Button>
       </div>
 
       {/* Attendance Card */}
@@ -152,11 +173,10 @@ export default function AttendancePage() {
                       <td className="py-3 px-4 text-sm">{formatDateTime(record.timeStamp)}</td>
                       <td className="py-3 px-4">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            record.verificationType === "Face"
-                              ? "bg-blue-100 text-blue-800 border border-blue-200"
-                              : "bg-purple-100 text-purple-800 border border-purple-200"
-                          }`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${record.verificationType === "Face"
+                            ? "bg-blue-100 text-blue-800 border border-blue-200"
+                            : "bg-purple-100 text-purple-800 border border-purple-200"
+                            }`}
                         >
                           {record.verificationType === "Face" ? (
                             <CheckCircle className="h-3 w-3" />
