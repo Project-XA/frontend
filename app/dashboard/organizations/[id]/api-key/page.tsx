@@ -116,6 +116,88 @@ export default function GenerateApiKeyPage() {
                     )}
                 </CardFooter>
             </Card>
+
+            <div className="space-y-6">
+                <h2 className="text-xl font-semibold tracking-tight">Developer Guide</h2>
+                <p className="text-muted-foreground">
+                    Use the generated API Key to integrate attendance data into your backend systems.
+                </p>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-lg">Authentication</CardTitle>
+                        <CardDescription>
+                            All API requests must include the API Key in the <code>X-Api-Key</code> header.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="bg-muted p-4 rounded-md font-mono text-sm">
+                            X-Api-Key: YOUR_API_KEY
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-lg">Get Session Attendance</CardTitle>
+                        <CardDescription>
+                            Retrieves the list of attendees for a specific session.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid grid-cols-[100px_1fr] gap-2 text-sm">
+                            <span className="font-semibold">URL:</span>
+                            <span className="font-mono text-muted-foreground">/&#123;sessionId&#125;/attendance</span>
+                            <span className="font-semibold">Method:</span>
+                            <span className="font-mono text-muted-foreground">GET</span>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-lg">Get Session Attendance CSV</CardTitle>
+                        <CardDescription>
+                            Downloads a CSV file containing the attendance records for a specific session.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid grid-cols-[100px_1fr] gap-2 text-sm">
+                            <span className="font-semibold">URL:</span>
+                            <span className="font-mono text-muted-foreground">/session/&#123;sessionId&#125;/csv</span>
+                            <span className="font-semibold">Method:</span>
+                            <span className="font-mono text-muted-foreground">GET</span>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-lg">Integration Example (Node.js/Axios)</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <pre className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto">
+                            {`const axios = require('axios');
+
+async function getAttendance(sessionId, apiKey) {
+  try {
+    const response = await axios.get(\`https://api.attendo.com/\${sessionId}/attendance\`, {
+      headers: {
+        'X-Api-Key': apiKey
+      }
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Usage
+getAttendance('session-123', 'ace2...');`}
+                        </pre>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }
