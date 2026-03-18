@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'https://backend-production-9a44e.up.railway.app/api';
+const API_BASE_URL = 'https://backend-attendo.up.railway.app/api';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
