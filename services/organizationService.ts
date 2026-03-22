@@ -6,7 +6,11 @@ const BASE_PATH = '/Organization';
 
 export const organizationService = {
   createOrganization: async (data: CreateOrganizationRequest): Promise<ApiResponse<Organization>> => {
-    const response = await axiosInstance.post<ApiResponse<Organization>>(`${BASE_PATH}/create-organization`, data);
+    const response = await axiosInstance.post<ApiResponse<Organization>>(
+      `${BASE_PATH}/create-organization`,
+      data,
+      { skipAuthRedirect: true }
+    );
     return response.data;
   },
 

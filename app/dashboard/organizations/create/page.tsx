@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { AxiosError } from "axios";
 import { organizationService } from "@/services/organizationService";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -18,9 +19,24 @@ export default function CreateOrganizationPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const organizationTypeBeforeUniversityRef = useRef("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+    if (name === "isUniversity" && type === "checkbox") {
+      setFormData((prev) => {
+        if (checked) {
+          organizationTypeBeforeUniversityRef.current = prev.organizationType;
+          return { ...prev, isUniversity: true, organizationType: "University" };
+        }
+        return {
+          ...prev,
+          isUniversity: false,
+          organizationType: organizationTypeBeforeUniversityRef.current,
+        };
+      });
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -34,7 +50,7 @@ export default function CreateOrganizationPage() {
     try {
       const response = await organizationService.createOrganization({
         organizationName: formData.organizationName,
-        organizationType: formData.organizationType,
+        organizationType: formData.isUniversity ? "University" : formData.organizationType,
         conatactEmail: formData.conatactEmail,
         isUniversity: formData.isUniversity,
       });
@@ -43,8 +59,20 @@ export default function CreateOrganizationPage() {
       } else {
         setError(response.message || "Failed to create organization");
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "An error occurred");
+    } catch (err: unknown) {
+      const ax = err as AxiosError<{ message?: string; errors?: string[] }>;
+      const data = ax.response?.data;
+      const fromErrors =
+        data && typeof data === "object" && Array.isArray(data.errors) && data.errors.length
+          ? data.errors.join(" ")
+          : undefined;
+      const fromMessage =
+        data && typeof data === "object" && typeof data.message === "string" ? data.message : undefined;
+      let msg = fromErrors || fromMessage || ax.message || "An error occurred";
+      if (ax.response?.status === 401) {
+        msg = `${msg} If this keeps happening, sign out and sign in again.`;
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -69,6 +97,21 @@ export default function CreateOrganizationPage() {
                 required
             />
         </div>
+        <label className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-4 cursor-pointer hover:bg-muted/50 transition-colors">
+          <input
+            name="isUniversity"
+            type="checkbox"
+            checked={formData.isUniversity}
+            onChange={handleChange}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary"
+          />
+          <span className="text-sm leading-snug">
+            <span className="font-medium">This is a university</span>
+            <span className="block text-muted-foreground text-xs mt-1">
+              When enabled, the organization type is set to University and cannot be edited manually.
+            </span>
+          </span>
+        </label>
         <div className="space-y-2">
             <label className="text-sm font-medium">Type</label>
             <Input
@@ -76,6 +119,17 @@ export default function CreateOrganizationPage() {
                 value={formData.organizationType}
                 onChange={handleChange}
                 required
+                disabled={formData.isUniversity}
+                title={
+                  formData.isUniversity
+                    ? "Type is set to University for this organization."
+                    : undefined
+                }
+                className={
+                  formData.isUniversity
+                    ? "cursor-not-allowed opacity-80 bg-muted"
+                    : undefined
+                }
             />
         </div>
         <div className="space-y-2">
@@ -88,21 +142,6 @@ export default function CreateOrganizationPage() {
                 required
             />
         </div>
-        <label className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-4 cursor-pointer hover:bg-muted/50 transition-colors">
-          <input
-            name="isUniversity"
-            type="checkbox"
-            checked={formData.isUniversity}
-            onChange={handleChange}
-            className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary"
-          />
-          <span className="text-sm leading-snug">
-            <span className="font-medium">This is a university</span>
-            <span className="block text-muted-foreground text-xs mt-1">
-              Enable if this organization represents a university or higher-education institution.
-            </span>
-          </span>
-        </label>
 
         {error && <div className="text-destructive text-sm">{error}</div>}
 

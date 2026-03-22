@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 import { ApiResponse, LoginRequest, RegisterRequest, VerifyOtpRequest } from '@/types/auth'; // Assuming path alias @ exists or relative path
 import Cookies from 'js-cookie';
+import { getAuthCookieOptions } from '@/lib/authCookie';
 
 const AUTH_BASE_PATH = '/Account';
 
@@ -13,8 +14,8 @@ export const authService = {
   login: async (data: LoginRequest): Promise<ApiResponse<string>> => {
     const response = await axiosInstance.post<ApiResponse<string>>(`${AUTH_BASE_PATH}/Login`, data);
     if (response.data.success && response.data.data) {
-      // Store token in cookies
-      Cookies.set('token', response.data.data, { secure: true, sameSite: 'strict', expires: 7 }); // Expires in 7 days
+      const token = String(response.data.data).trim();
+      Cookies.set('token', token, getAuthCookieOptions());
     }
     return response.data;
   },

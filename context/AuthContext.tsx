@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { getAuthCookieOptions } from "@/lib/authCookie";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -28,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = (token: string) => {
-    Cookies.set("token", token, { secure: true, sameSite: "strict", expires: 7 });
+    Cookies.set("token", token.trim(), getAuthCookieOptions());
     setIsAuthenticated(true);
     router.push("/dashboard");
   };

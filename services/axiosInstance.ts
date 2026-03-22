@@ -13,7 +13,8 @@ const axiosInstance = axios.create({
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = Cookies.get('token');
+    const raw = Cookies.get("token");
+    const token = raw?.trim();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,13 +29,13 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    // Check if error is 401 (Unauthorized)
-    if (error.response && error.response.status === 401) {
-      // Since there is no refresh token endpoint currently, we logout the user
-      Cookies.remove('token');
-      // Redirect to login if in browser environment
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+    const status = error.response?.status;
+    const skipRedirect = error.config?.skipAuthRedirect === true;
+
+    if (status === 401 && !skipRedirect) {
+      Cookies.remove("token");
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);
