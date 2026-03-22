@@ -25,6 +25,7 @@ export default function UpdateOrganizationPage() {
     organizationName: "",
     organizationType: "",
     conatactEmail: "",
+    isUniversity: false,
   });
   const [updating, setUpdating] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -164,6 +165,22 @@ export default function UpdateOrganizationPage() {
               onChange={(e) => setUpdateData({ ...updateData, conatactEmail: e.target.value })}
               required
             />
+            <label className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-4 cursor-pointer hover:bg-muted/50 transition-colors">
+              <input
+                type="checkbox"
+                checked={updateData.isUniversity}
+                onChange={(e) =>
+                  setUpdateData({ ...updateData, isUniversity: e.target.checked })
+                }
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary"
+              />
+              <span className="text-sm leading-snug">
+                <span className="font-medium">This is a university</span>
+                <span className="block text-muted-foreground text-xs mt-1">
+                  Enable if this organization represents a university or higher-education institution.
+                </span>
+              </span>
+            </label>
 
             {updateError && (
               <Alert variant="destructive">

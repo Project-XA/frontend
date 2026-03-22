@@ -109,7 +109,10 @@ export default function CreateHallPage() {
             >
                 <option value="" disabled>-- Select Organization --</option>
                 {organizations.map(org => (
-                    <option key={org.organizationId} value={org.organizationId}>{org.organizationName}</option>
+                    <option key={org.organizationId} value={org.organizationId}>
+                      {org.organizationName}
+                      {org.isUniversity ? " (University)" : ""}
+                    </option>
                 ))}
             </select>
         </div>

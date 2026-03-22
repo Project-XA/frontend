@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { organizationService } from "@/services/organizationService";
 import { Organization } from "@/types/organization";
 import { Button } from "@/components/ui/Button";
-import { Loader2, Plus, Building2, RefreshCw } from "lucide-react";
+import { Loader2, Plus, Building2, RefreshCw, GraduationCap } from "lucide-react";
 import Link from "next/link";
 
 export default function OrganizationsPage() {
@@ -84,7 +84,15 @@ export default function OrganizationsPage() {
                 </div>
                 <div className="flex-1 space-y-2">
                   <div>
-                    <h3 className="text-base sm:text-xl font-semibold">{org.organizationName}</h3>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-base sm:text-xl font-semibold">{org.organizationName}</h3>
+                      {org.isUniversity && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium">
+                          <GraduationCap className="h-3 w-3" aria-hidden />
+                          University
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
                   </div>
 

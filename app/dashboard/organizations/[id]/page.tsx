@@ -11,7 +11,7 @@ import { Hall } from "@/types/hall";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
-import { Loader2, Building2, UserPlus, AlertCircle, ArrowLeft, Users, Settings, Key, Clock, Calendar, Activity } from "lucide-react";
+import { Loader2, Building2, UserPlus, AlertCircle, ArrowLeft, Users, Settings, Key, Clock, Calendar, Activity, GraduationCap } from "lucide-react";
 import Link from "next/link";
 
 export default function OrganizationDetailPage() {
@@ -174,7 +174,16 @@ export default function OrganizationDetailPage() {
               <Building2 className="h-6 w-6 text-muted-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">{organization.organizationName}</h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl font-bold tracking-tight">{organization.organizationName}</h1>
+                {organization.isUniversity && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2.5 py-0.5 text-xs font-medium">
+                    <GraduationCap className="h-3.5 w-3.5" aria-hidden />
+                    University
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground mt-0.5">{organization.organizationType}</p>
               <p className="text-sm text-muted-foreground">Code: {organization.organizationCode}</p>
             </div>
           </div>

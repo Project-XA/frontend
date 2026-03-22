@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { organizationService } from "@/services/organizationService";
 import { Organization, OrganizationEvent } from "@/types/organization";
-import { Loader2, Building2, Plus, ArrowRight, Activity, Clock } from "lucide-react";
+import { Loader2, Building2, Plus, ArrowRight, Activity, Clock, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -101,8 +101,16 @@ export default function DashboardPage() {
                     <div className="p-2 sm:p-3 rounded-lg bg-muted">
                       <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-base sm:text-lg">{org.organizationName}</h3>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-semibold text-base sm:text-lg">{org.organizationName}</h3>
+                        {org.isUniversity && (
+                          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium">
+                            <GraduationCap className="h-3 w-3" aria-hidden />
+                            University
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
                     </div>
                   </div>

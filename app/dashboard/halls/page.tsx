@@ -156,6 +156,7 @@ export default function HallsPage() {
             {organizations.map((org) => (
               <option key={org.organizationId} value={org.organizationId}>
                 {org.organizationName}
+                {org.isUniversity ? " (University)" : ""}
               </option>
             ))}
           </select>

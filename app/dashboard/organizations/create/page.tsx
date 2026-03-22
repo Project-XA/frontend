@@ -14,12 +14,17 @@ export default function CreateOrganizationPage() {
     organizationName: "",
     organizationType: "",
     conatactEmail: "",
+    isUniversity: false,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +32,12 @@ export default function CreateOrganizationPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await organizationService.createOrganization(formData);
+      const response = await organizationService.createOrganization({
+        organizationName: formData.organizationName,
+        organizationType: formData.organizationType,
+        conatactEmail: formData.conatactEmail,
+        isUniversity: formData.isUniversity,
+      });
       if (response.success) {
         router.push("/dashboard/organizations");
       } else {
@@ -78,6 +88,21 @@ export default function CreateOrganizationPage() {
                 required
             />
         </div>
+        <label className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-4 cursor-pointer hover:bg-muted/50 transition-colors">
+          <input
+            name="isUniversity"
+            type="checkbox"
+            checked={formData.isUniversity}
+            onChange={handleChange}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary"
+          />
+          <span className="text-sm leading-snug">
+            <span className="font-medium">This is a university</span>
+            <span className="block text-muted-foreground text-xs mt-1">
+              Enable if this organization represents a university or higher-education institution.
+            </span>
+          </span>
+        </label>
 
         {error && <div className="text-destructive text-sm">{error}</div>}
 

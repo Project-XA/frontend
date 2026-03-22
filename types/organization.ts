@@ -2,12 +2,14 @@ export interface CreateOrganizationRequest {
   organizationName: string;
   organizationType: string;
   conatactEmail: string; // Typo from API docs preserved
+  isUniversity?: boolean;
 }
 
 export interface UpdateOrganizationRequest {
   organizationName: string;
   organizationType: string;
   conatactEmail: string;
+  isUniversity: boolean;
 }
 
 export interface Organization {
@@ -17,6 +19,8 @@ export interface Organization {
   conatactEmail: string;
   organizationCode: number;
   createdAt: string;
+  /** Present on API responses; treat missing as false. */
+  isUniversity?: boolean;
 }
 
 export interface AddMemberRequest {
