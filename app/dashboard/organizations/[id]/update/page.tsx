@@ -46,6 +46,7 @@ export default function UpdateOrganizationPage() {
             organizationName: response.data.organizationName,
             organizationType: response.data.organizationType,
             conatactEmail: response.data.conatactEmail,
+            isUniversity: !!response.data.isUniversity,
           });
         } else {
           setError("Organization not found.");
