@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AppSidebar } from "@/components/AppSidebar";
+import { AmbientScene } from "@/components/AmbientScene";
 import { isAuthenticated } from "@/lib/authUtils";
 import { Loader2 } from "lucide-react";
 
@@ -12,6 +13,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isChecking, setIsChecking] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
 
@@ -42,14 +44,16 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen pt-16 relative">
-      {/* Sidebar - Hidden on mobile, fixed on desktop */}
-      <div className="hidden md:block w-72 border-r bg-background h-[calc(100vh-4rem)] sticky top-16">
-         <AppSidebar />
+    <div className="flex min-h-screen pt-16 relative isolate">
+      <div className="hidden md:block w-72 border-r bg-background/80 backdrop-blur-sm h-[calc(100vh-4rem)] sticky top-16 z-10">
+        <AppSidebar />
       </div>
 
-      <main className="flex-1 overflow-y-auto bg-background p-4 md:p-8 w-full">
-        {children}
+      <main className="relative flex-1 overflow-y-auto p-4 md:p-8 w-full min-w-0">
+        <AmbientScene variant="dashboard" className="z-0 rounded-none" />
+        <div key={pathname} className="relative z-[1] dashboard-page-enter">
+          {children}
+        </div>
       </main>
     </div>
   );

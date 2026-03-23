@@ -183,7 +183,9 @@ export default function OrganizationDetailPage() {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">{organization.organizationType}</p>
+              {!organization.isUniversity && organization.organizationType && (
+                <p className="text-sm text-muted-foreground mt-0.5">{organization.organizationType}</p>
+              )}
               <p className="text-sm text-muted-foreground">Code: {organization.organizationCode}</p>
             </div>
           </div>

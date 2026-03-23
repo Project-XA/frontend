@@ -8,6 +8,7 @@ import { MobileFrame } from "@/components/MobileFrame";
 import { AdminAttendanceMockup } from "@/components/AdminAttendanceMockup";
 import { UserAttendanceMockup } from "@/components/UserAttendanceMockup";
 import { Footer } from "@/components/Footer";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { isAuthenticated } from "@/lib/authUtils";
 
 export default function FeaturesPage() {
@@ -42,32 +43,33 @@ export default function FeaturesPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen pt-16 bg-white">
+    <div className="flex flex-col min-h-screen pt-16 bg-gradient-to-b from-background to-zinc-50/40">
       <main className="flex-1 w-full">
         {/* Hero Section */}
-        <section className="py-20 md:py-32 px-6 bg-white">
-          <div className="container mx-auto max-w-6xl">
-            <div className="text-center space-y-6">
-              <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold">
+        <section className="relative py-20 md:py-32 px-6 overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_50%_-20%,rgba(9,9,11,0.06),transparent)]" />
+          <div className="container relative mx-auto max-w-6xl">
+            <RevealOnScroll className="text-center space-y-6">
+              <div className="inline-block px-4 py-2 bg-black text-white rounded-full text-sm font-semibold shadow-md shadow-black/10">
                 Powerful Features
               </div>
               <h1 className="text-5xl md:text-6xl font-bold text-black tracking-tight">
                 Attendance Made Simple
               </h1>
-              <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-zinc-600 max-w-3xl mx-auto leading-relaxed">
                 Real-time attendance tracking with secure verification, intuitive design, and complete visibility for both users and administrators.
               </p>
 
               {isAuth && (
-                <div className="pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="pt-4">
                   <Link href="/dashboard">
-                    <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-gray-900 font-semibold shadow-lg hover:shadow-xl transition-all">
+                    <Button size="lg" className="h-12 px-8 text-base bg-black text-white hover:bg-zinc-900 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5">
                       Go to Dashboard
                     </Button>
                   </Link>
                 </div>
               )}
-            </div>
+            </RevealOnScroll>
           </div>
         </section>
 

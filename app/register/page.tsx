@@ -68,8 +68,8 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 flex w-full items-center justify-center bg-white pt-24 px-4 py-12">
-        <Card className="w-full max-w-lg border-black/10 bg-white shadow-sm mx-auto">
+      <main className="relative flex-1 flex w-full items-center justify-center pt-24 px-4 py-12 min-h-[calc(100vh-4rem)]">
+        <Card className="w-full max-w-lg border-black/10 bg-white/90 shadow-xl shadow-black/5 backdrop-blur-md mx-auto transition-shadow duration-300 hover:shadow-2xl hover:shadow-black/10">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tight text-black">
               Create an account

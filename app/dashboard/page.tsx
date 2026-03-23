@@ -111,7 +111,9 @@ export default function DashboardPage() {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
+                      {!org.isUniversity && org.organizationType && (
+                        <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
+                      )}
                     </div>
                   </div>
                 </div>

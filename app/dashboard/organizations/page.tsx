@@ -93,7 +93,9 @@ export default function OrganizationsPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
+                    {!org.isUniversity && org.organizationType && (
+                      <p className="text-xs sm:text-sm text-muted-foreground">{org.organizationType}</p>
+                    )}
                   </div>
 
                   <div className="grid gap-1 text-sm pt-2">

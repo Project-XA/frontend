@@ -38,12 +38,65 @@
   --radius: 0.5rem;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--foreground) 12%, transparent);
+  color: var(--foreground);
+}
+
+/* Accessible skip link (visible on keyboard focus only) */
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0.625rem 1rem;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  border-radius: var(--radius);
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 10px 40px -10px rgba(9, 9, 11, 0.25);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.skip-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 /* Custom Animations */
@@ -71,10 +124,144 @@ body {
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    box-shadow: 0 0 0 0 rgba(9, 9, 11, 0.15);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 10px rgba(9, 9, 11, 0);
+  }
+}
+
+/* Ambient 3D-style planes (monochrome, subtle drift) */
+@keyframes ambient-drift-1 {
+  0%, 100% {
+    transform: rotateX(68deg) rotateZ(-14deg) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotateX(68deg) rotateZ(-14deg) translate3d(0, -16px, 0);
+  }
+}
+
+@keyframes ambient-drift-2 {
+  0%, 100% {
+    transform: rotateX(62deg) rotateZ(8deg) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotateX(62deg) rotateZ(8deg) translate3d(0, 12px, 0);
+  }
+}
+
+@keyframes ambient-drift-3 {
+  0%, 100% {
+    transform: rotateX(58deg) rotateZ(-6deg) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotateX(58deg) rotateZ(-6deg) translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes ambient-orb-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ambient-orb-pulse-delayed {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.08);
+  }
+}
+
+.ambient-float-1 {
+  animation: ambient-drift-1 16s ease-in-out infinite;
+}
+
+.ambient-float-2 {
+  animation: ambient-drift-2 18s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.ambient-float-3 {
+  animation: ambient-drift-3 20s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+.ambient-orb {
+  animation: ambient-orb-pulse 12s ease-in-out infinite;
+}
+
+.ambient-orb-delay {
+  animation: ambient-orb-pulse-delayed 14s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-float-1,
+  .ambient-float-2,
+  .ambient-float-3,
+  .ambient-orb,
+  .ambient-orb-delay {
+    animation: none;
+  }
+}
+
+/* Scroll reveal (opacity + motion only — no blur for GPU-friendly paint) */
+.reveal-on-scroll {
+  transition-property: opacity, transform;
+  transition-duration: 0.75s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-on-scroll-hidden {
+  opacity: 0;
+  transform: translate3d(0, 1.25rem, 0);
+}
+
+.reveal-on-scroll-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .reveal-on-scroll-hidden,
+  .reveal-on-scroll-visible {
+    transition: none;
+  }
+  .reveal-on-scroll-hidden {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Dashboard route enter */
+@keyframes dashboard-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.dashboard-page-enter {
+  animation: dashboard-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page-enter {
+    animation: none;
   }
 }
 

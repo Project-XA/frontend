@@ -13,6 +13,14 @@ export function Navbar() {
   const { isAuthenticated, logout, isLoading } = useAuth();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -79,7 +87,12 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl">
+      <nav
+        className={cn(
+          "fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl transition-[box-shadow,background-color] duration-300",
+          scrolled ? "shadow-sm bg-white/95" : "shadow-none"
+        )}
+      >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
           {/* Left */}
           <div className="flex items-center gap-10">

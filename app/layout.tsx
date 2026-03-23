@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
+import { AmbientScene } from "@/components/AmbientScene";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,14 +28,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-background text-foreground`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+        <div
+          className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
+          aria-hidden
+        >
+          <AmbientScene variant="page" />
+        </div>
         <AuthProvider>
-          {/* Navbar */}
           <Navbar />
-
-          {/* Page content */}
-          <main className="flex-1">
+          <main id="main-content" className="relative z-0 flex-1 min-w-0">
             {children}
           </main>
         </AuthProvider>

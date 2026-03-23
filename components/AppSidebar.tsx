@@ -49,7 +49,7 @@ export function AppSidebar({ onItemClick }: AppSidebarProps) {
               href={item.href}
               onClick={onItemClick}
               className={cn(
-                "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all",
+                "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 ease-out",
                 active
                   ? "bg-foreground text-background shadow-sm ring-1 ring-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"

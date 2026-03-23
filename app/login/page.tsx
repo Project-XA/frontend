@@ -56,8 +56,8 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 flex w-full items-center justify-center pt-20 p-4 bg-white">
-        <Card className="w-full max-w-md border-black/10 bg-white">
+      <main className="relative flex-1 flex w-full items-center justify-center pt-24 p-4 min-h-[calc(100vh-4rem)]">
+        <Card className="w-full max-w-md border-black/10 bg-white/90 shadow-xl shadow-black/5 backdrop-blur-md transition-shadow duration-300 hover:shadow-2xl hover:shadow-black/10">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-3xl font-bold tracking-tight text-black">
               Welcome back

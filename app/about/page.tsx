@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/Button";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen pt-16 bg-white">
+    <div className="flex flex-col min-h-screen pt-16 bg-gradient-to-b from-background to-zinc-50/40">
       <section className="container py-24 px-6 mx-auto max-w-4xl">
-        <div className="space-y-8">
+        <RevealOnScroll>
+          <div className="space-y-8">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold tracking-tight text-black sm:text-5xl">
               About Attendo
@@ -44,6 +46,7 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+        </RevealOnScroll>
       </section>
     </div>
   );
