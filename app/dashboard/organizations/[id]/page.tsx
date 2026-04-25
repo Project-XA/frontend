@@ -11,7 +11,7 @@ import { Hall } from "@/types/hall";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
-import { Loader2, Building2, UserPlus, AlertCircle, ArrowLeft, Users, Settings, Key, Clock, Calendar, Activity, GraduationCap } from "lucide-react";
+import { Loader2, Building2, UserPlus, AlertCircle, ArrowLeft, Users, Settings, Key, Clock, Calendar, Activity, GraduationCap, BookOpen } from "lucide-react";
 import Link from "next/link";
 
 export default function OrganizationDetailPage() {
@@ -192,7 +192,14 @@ export default function OrganizationDetailPage() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
+          {organization.isUniversity && (
+            <Link href={`/dashboard/organizations/${orgId}/sections`}>
+              <Button variant="outline" className="text-primary hover:text-primary border-primary hover:bg-primary/10">
+                <BookOpen className="mr-2 h-4 w-4" /> Manage Sections
+              </Button>
+            </Link>
+          )}
           <Link href={`/dashboard/organizations/${orgId}/api-key`}>
             <Button variant="outline" className="text-destructive hover:text-destructive border-destructive hover:bg-destructive/10">
               <Key className="mr-2 h-4 w-4" /> Generate API Key

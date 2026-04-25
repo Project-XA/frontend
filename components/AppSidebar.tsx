@@ -2,13 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Building2,
   Store,
+  BookOpen,
+  PlusCircle,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { organizationService } from "@/services/organizationService";
 
 const sidebarItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -22,11 +26,32 @@ interface AppSidebarProps {
 
 export function AppSidebar({ onItemClick }: AppSidebarProps) {
   const pathname = usePathname();
+  const [universityOrgId, setUniversityOrgId] = useState<number | null>(null);
 
-  const isActive = (href: string) =>
-    href === "/dashboard"
-      ? pathname === href
-      : pathname?.startsWith(href);
+  useEffect(() => {
+    // Fetch user's organizations and find first university
+    organizationService.getUserOrganizations().then((response) => {
+      if (response.success && response.data) {
+        const universityOrg = response.data.find((org) => org.isUniversity);
+        if (universityOrg) {
+          setUniversityOrgId(universityOrg.organizationId);
+        } else {
+          setUniversityOrgId(null);
+        }
+      }
+    }).catch(() => {
+      setUniversityOrgId(null);
+    });
+  }, []);
+
+  const isActive = (href: string) => {
+    if (href === "/dashboard") return pathname === href;
+    // For organizations, exclude sections sub-pages
+    if (href === "/dashboard/organizations") {
+      return pathname?.startsWith(href) && !pathname?.includes("/sections");
+    }
+    return pathname?.startsWith(href);
+  };
 
   return (
     <aside className="flex h-full w-full flex-col bg-background">
@@ -73,6 +98,32 @@ export function AppSidebar({ onItemClick }: AppSidebarProps) {
             </Link>
           );
         })}
+
+        {/* Sections link - only for university organizations */}
+        {universityOrgId && (
+          <Link
+            href={`/dashboard/organizations/${universityOrgId}/sections`}
+            onClick={onItemClick}
+            className={cn(
+              "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 ease-out",
+              pathname?.includes("/sections")
+                ? "bg-foreground text-background shadow-sm ring-1 ring-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            )}
+          >
+            <span
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-lg border",
+                pathname?.includes("/sections")
+                  ? "bg-background text-foreground border-background"
+                  : "bg-muted text-muted-foreground group-hover:text-foreground"
+              )}
+            >
+              <BookOpen className="h-4 w-4" />
+            </span>
+            <span className="font-medium">Sections</span>
+          </Link>
+        )}
       </nav>
     </aside>
   );
